@@ -20,7 +20,7 @@ j = json.load(open(sys.argv[1]))
 for i in j["network"]:
   if i["type"].lower() == "public":
     #Set Default Gateway
-    os.system("%s %s %s %s" %("./conf","/etc/sysconfig/network","GATEWAY", i["gateway"]))
+    os.system("%s %s %s %s" %("/var/local/sysinit/bin/conf-update","/etc/sysconfig/network","GATEWAY", i["gateway"]))
   f = open("/etc/sysconfig/network-scripts/ifcfg-%s" % i["nic"], "w")
   chkwrt(f, "DEVICE", i, "nic")
   chkwrt(f, "HWADDR", i, "mac")
@@ -46,10 +46,13 @@ for i in j["network"]:
   f.close()
 
 if j.has_key("hostname"):
-  os.system("%s %s %s %s" %("./conf","/etc/sysconfig/network","HOSTNAME", j["HOSTNAME"]))
+  os.system("%s %s %s %s" % \
+    (""/var/local/sysinit/bin/conf-update","/etc/sysconfig/network","HOSTNAME", j["HOSTNAME"]))
 
-os.system("%s %s %s %s" %("./conf","/etc/sysconfig/network","NETWORKING", "yes"))
-os.system("%s %s %s %s" %("./conf","/etc/sysconfig/network","NOZEROCONF", "yes"))
+os.system("%s %s %s %s" % \
+  ("/var/local/sysinit/bin/conf-update", "/etc/sysconfig/network","NETWORKING", "yes"))
+os.system("%s %s %s %s" % \
+  ("/var/local/sysinit/bin/conf-update", "/etc/sysconfig/network","NOZEROCONF", "yes"))
 
 os.system("truncate -s0 /etc/udev/rules.d/70-persistent-net.rules")
 os.system("truncate -s0 /lib/udev/rules.d/75-persistent-net-generator.rules")
